@@ -236,7 +236,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   }
                 },
                 child: Text(
-                  'Source Code to this Vibe-Coded App',
+                  isSmallScreen
+                      ? 'Source Code'
+                      : 'Source Code to this Vibe-Coded App',
                   style: TextStyle(
                     fontSize: 14,
                     color: Theme.of(context).colorScheme.primary,
