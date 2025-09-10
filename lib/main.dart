@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_posters/posters_config.dart' as config;
@@ -65,7 +67,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  num _crossAxisCount = 5;
+  final _defaultGridSize = 256;
+  num _crossAxisCount = 0;
   late TabController _tabController;
   bool _tabControllerInitialized = false;
 
@@ -107,8 +110,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isSmallScreen = screenWidth < 600;
-    final crossAxisCount = isSmallScreen ? 2 : _crossAxisCount;
+    final isSmallScreen = screenWidth < 650;
+    num crossAxisCountSuggestion = max(
+      2,
+      min<num>((screenWidth / _defaultGridSize).round(), 20),
+    );
+    num crossAxisCount = (_crossAxisCount == 0)
+        ? crossAxisCountSuggestion
+        : _crossAxisCount;
+
     final workoutProvider = Provider.of<WorkoutProvider>(context);
 
     if (workoutProvider.errorMessage != null) {
@@ -251,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                     Expanded(
                       child: Slider(
-                        value: _crossAxisCount * 1.0,
+                        value: crossAxisCount * 1.0,
                         min: 2,
                         max: 20,
                         divisions: 18,
